@@ -81,6 +81,22 @@ require([
     return context.toCommas();
   });
 
+  $.fn.noHandleChildren = function() {
+
+    var SearchMenu = function(el) {
+      var $el = $(el),
+          menuChildren = $el.find('.submenu li').length;
+
+      if (menuChildren === 0) {
+        $el.addClass('no-child');
+      }
+    };
+
+    return this.each(function(index, el) {
+      new SearchMenu(el);
+    });
+  };
+
   new Router();
 
   var scrollTop,
@@ -136,10 +152,11 @@ require([
     e.preventDefault();
   }
 
-  $('.click-to-see-btn').on('click', goTo);
+  $('.btn-go-to-projects').on('click', goTo);
 
   sectionTitle();
   addClassToBody();
+  $('.menu-item').noHandleChildren();
   $(window).on('scroll', fixCategoriesSelector);
 
   var $projectBudget = $('#projectBudgetValue');

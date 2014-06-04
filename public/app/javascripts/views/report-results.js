@@ -167,6 +167,8 @@ define([
     },
 
     donorsCharts: function() {
+      var self = this;
+
       $('#donorsByProjectsChart').highcharts(_.extend(this.options.columnChart, {
         series: this.data.donors_by_projects
       }));
@@ -179,15 +181,30 @@ define([
         series: this.data.donors_by_countries
       }));
 
-      if (this.donorsMap) {
-        this.donorsMap.remove();
+      function setDonorsLocations(layer) {
+        if (self.donorsMap) {
+          self.donorsMap.remove();
+        }
+        self.donorsMap = self.setMap('reportDonorsMap');
+        self.donorsLayer = self.setLayer(self.donorsMap, layer);
       }
 
-      this.donorsMap = this.setMap('reportDonorsMap');
-      this.donorsLayer = this.setLayer(this.donorsMap, 'donors_by_projects');
+      $('#reportDonorsLocations').find('.mod-report-locations-header a').on('click', function(e) {
+        e.preventDefault();
+        var $el = $(e.currentTarget);
+        var $parent = $el.closest('.mod-report-locations-header');
+
+        $parent.find('.current').text($el.text());
+
+        setDonorsLocations($el.data('layer'));
+      });
+
+      setDonorsLocations('donors_by_projects');
     },
 
     organizationsCharts: function() {
+      var self = this;
+
       $('#organizationsByProjectsChart').highcharts(_.extend(this.options.columnChart, {
         series: this.data.organizations_by_projects
       }));
@@ -199,9 +216,35 @@ define([
       $('#organizationsByBudgetChart').highcharts(_.extend(this.options.columnChart, {
         series: this.data.organizations_by_bugdet
       }));
+
+      if (this.organizationsMap) {
+        this.organizationsMap.remove();
+      }
+
+      function setOrganizationsLocations(layer) {
+        if (self.organizationsMap) {
+          self.organizationsMap.remove();
+        }
+        self.organizationsMap = self.setMap('reportOrganizationsMap');
+        self.organizationsLayer = self.setLayer(self.organizationsMap, layer);
+      }
+
+      $('#reportOrganizationsLocations').find('.mod-report-locations-header a').on('click', function(e) {
+        e.preventDefault();
+        var $el = $(e.currentTarget);
+        var $parent = $el.closest('.mod-report-locations-header');
+
+        $parent.find('.current').text($el.text());
+
+        setOrganizationsLocations($el.data('layer'));
+      });
+
+      setOrganizationsLocations('organizations_by_projects');
     },
 
     countriesCharts: function() {
+      var self = this;
+
       $('#countriesByProjectsChart').highcharts(_.extend(this.options.columnChart, {
         series: this.data.countries_by_donors
       }));
@@ -213,9 +256,35 @@ define([
       $('#countriesByDonorsChart').highcharts(_.extend(this.options.columnChart, {
         series: this.data.countries_by_projects
       }));
+
+      if (this.countriesMap) {
+        this.countriesMap.remove();
+      }
+
+      function setCountriesLocations(layer) {
+        if (self.countriesMap) {
+          self.countriesMap.remove();
+        }
+        self.countriesMap = self.setMap('reportCountriesMap');
+        self.countriesLayer = self.setLayer(self.countriesMap, layer);
+      }
+
+      $('#reportCountriesLocations').find('.mod-report-locations-header a').on('click', function(e) {
+        e.preventDefault();
+        var $el = $(e.currentTarget);
+        var $parent = $el.closest('.mod-report-locations-header');
+
+        $parent.find('.current').text($el.text());
+
+        setCountriesLocations($el.data('layer'));
+      });
+
+      setCountriesLocations('countries_by_donors');
     },
 
     sectorsCharts: function() {
+      var self = this;
+
       $('#sectorsByProjectsChart').highcharts(_.extend(this.options.columnChart, {
         series: this.data.sectors_by_projects
       }));
@@ -227,6 +296,30 @@ define([
       $('#sectorsByDonorsChart').highcharts(_.extend(this.options.columnChart, {
         series: this.data.sectors_by_donors
       }));
+
+      if (this.sectorsMap) {
+        this.sectorsMap.remove();
+      }
+
+      function setSectorsLocations(layer) {
+        if (self.sectorsMap) {
+          self.sectorsMap.remove();
+        }
+        self.sectorsMap = self.setMap('reportSectorsMap');
+        self.sectorsLayer = self.setLayer(self.sectorsMap, layer);
+      }
+
+      $('#reportSectorsLocations').find('.mod-report-locations-header a').on('click', function(e) {
+        e.preventDefault();
+        var $el = $(e.currentTarget);
+        var $parent = $el.closest('.mod-report-locations-header');
+
+        $parent.find('.current').text($el.text());
+
+        setSectorsLocations($el.data('layer'));
+      });
+
+      setSectorsLocations('sectors_by_projects');
     },
 
     printReport: function() {
@@ -254,7 +347,7 @@ define([
           var fsize = (feature.properties.projects > 20) ? 0.6 * feature.properties.projects : 12;
 
           size = (size > 50) ? 50 : size;
-          fsize = (fsize > 24) ? 24 : fsize;
+          fsize = (fsize > 19) ? 19 : fsize;
 
           var marker = L.marker(latlng, {
             icon: L.divIcon({
@@ -291,10 +384,7 @@ define([
             type: 'Point',
             coordinates: [d.lat, d.lng]
           },
-          properties: {
-            name: d.name,
-            projects: d.projects
-          }
+          properties: d
         };
       });
 
