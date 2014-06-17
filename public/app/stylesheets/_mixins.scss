@@ -100,12 +100,13 @@
     }
   }
 
-  &:hover, &.active {
+  .is-screen &:hover, &.active, &.is-touched {
     background-color: $primary-color;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
+    color: $color-0;
   }
   &.active {
     border-top-left-radius: 0px;
@@ -113,7 +114,7 @@
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
   }
-  &:hover:after {
+  .is-screen &:hover:after, &.is-touched:after {
     @include after('', block, absolute, -15px, auto, 15px, 15px);
     top: 0;
     @include negative-radius-upper($primary-color, 15px);
@@ -188,6 +189,7 @@
     background-color: $primary-color;
     color: $color-0;
   }
+
 }
 
 @mixin drop-down-menu($primary-color){
@@ -203,6 +205,15 @@
       }
     }
     .father a { color: $color-0;}
+  }
+  &.no-child:hover .index-item {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    &:after {
+      display: none;
+    }
   }
 
 

@@ -45,6 +45,10 @@ button, input {
   body { font-size: 1em;}
 }
 
+iframe {
+  margin: 20px auto;
+}
+
 /*********************************************************************************************/
 /******************************************LINKS**********************************************/
 /*********************************************************************************************/
@@ -60,6 +64,7 @@ h1 {
   margin-bottom: 25px;
   font-size: 48px;
   font-weight: lighter;
+
   .about &,
   .purpose &,
   .getting-on-the-map &,
@@ -72,6 +77,8 @@ h1 {
   .top-things-you-should-know-about-the-data &,
   .data-guidance &,
   .analysis &  { color: $color-1;}
+
+  .history & { display: none;}
 
 }
 h2 {
@@ -110,6 +117,14 @@ button {
   outline: none;
   padding: 0;
   cursor: pointer;
+}
+.button {
+  width: 100%;
+  height: 40px;
+  background-color: #c15022;
+  color: #fff;
+  font-size: 15px;
+  text-transform: uppercase;
 }
 
 /*********************************************************************************************/

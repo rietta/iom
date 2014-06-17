@@ -1,6 +1,9 @@
 class SitesController < ApplicationController
 
   layout :sites_layout
+  #layout :selective_layout
+  caches_action :site_home, :expires_in => 300, :cache_path => Proc.new { |c| c.params }
+  caches_action :general_home, :expires_in => 300, :cache_path => Proc.new { |c| c.params }
 
   def home
 
@@ -134,5 +137,15 @@ class SitesController < ApplicationController
 
   def contact
   end
+
+  private
+  def selective_layout
+    if (current_user && current_user.admin?)
+      sites_layout
+    else
+      'countdown'
+    end
+  end
+
 
 end

@@ -70,8 +70,15 @@ require.config({
 require([
   'jquery',
   'handlebars',
-  'router'
+  'router',
+  'chachiSlider'
 ], function($, Handlebars, Router) {
+
+  var $reportTitleTextarea = $('.report-title').find('textarea');
+
+  function is_touch_device() {
+    return 'ontouchstart' in window || 'onmsgesturechange' in window;
+  }
 
   // Extensions
   Number.prototype.toCommas = function() {
@@ -90,7 +97,7 @@ require([
 
     var SearchMenu = function(el) {
       var $el = $(el),
-          menuChildren = $el.find('.submenu li').length;
+        menuChildren = $el.find('.submenu li').length;
 
       if (menuChildren === 0) {
         $el.addClass('no-child');
@@ -102,12 +109,10 @@ require([
     });
   };
 
-  new Router();
-
   var scrollTop,
     categoriesSelector = $('.categories-selector'),
     menu = $('.mod-categories-selector .menu'),
-    elementOffset = (categoriesSelector.length > 0) ? $('.layout-content').offset().top + 60 : 0;
+    elementOffset = (categoriesSelector.length > 0) ? $('.main-content').offset().top - 49 : 0;
 
   function sectionTitle() {
     var $title = $('.section-title');
@@ -118,6 +123,8 @@ require([
   }
 
   function fixCategoriesSelector() {
+    elementOffset = (categoriesSelector.length > 0) ? $('.main-content').offset().top - 49 : 0;
+
     if (categoriesSelector.length === 0) {
       return false;
     }
@@ -152,9 +159,15 @@ require([
 
   function goTo(e) {
     $('body, html').animate({
-      scrollTop: $('.layout-content').offset().top - 109
+      scrollTop: $('.main-content').offset().top - 49
     }, 500);
     e.preventDefault();
+  }
+
+  function autoResizeTextare(el) {
+    if (el) {
+      $(el).css('height', 0).height(el.scrollHeight);
+    }
   }
 
   $('.btn-go-to-projects').on('click', goTo);
@@ -171,5 +184,24 @@ require([
       'font-size': '35px'
     });
   }
+
+  $('.mod-logos-slider').chachiSlider({
+    navigation: false,
+    pauseTime: 7000
+  });
+
+  $reportTitleTextarea.on('keyup', function(e) {
+    autoResizeTextare(e.currentTarget);
+  });
+
+  autoResizeTextare($reportTitleTextarea[0]);
+
+  if (is_touch_device()) {
+    $('body').addClass('is-touchscreen');
+  } else {
+    $('body').addClass('is-screen');
+  }
+
+  new Router();
 
 });

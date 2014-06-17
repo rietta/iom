@@ -19,7 +19,10 @@
     text-transform: uppercase;
     line-height: 1;
     margin-right: 2%;
-    cursor: pointer;
+    .is-touchscreen & {
+      margin-right: 1.2%;
+    }
+
     .father {
       display: block;
       padding: 9px 23px;
@@ -27,7 +30,7 @@
       @include border-radius(20px);
     }
     &.search { padding: 0;}
-    &:hover {
+    .is-screen &:hover {
       color: $color-0;
       .mod-go-up-menu { display: block;}
       .mod-drop-down-menu { display: block;}
@@ -134,7 +137,7 @@
     background-position: sprite-position($icons, icon-mining-and-extractive-resources, 4px, 5px);
   }
 
-  .non-food-relief-items {
+  .non-food-relief-items:before {
     @include icons-sprite(icon-non-food-relief-items);
     background-position: sprite-position($icons, icon-non-food-relief-items, 4px, 5px);
   }
@@ -159,7 +162,7 @@
     background-position: sprite-position($icons, icon-protection, 4px, 5px);
   }
 
-  .safety-nets {
+  .safety-nets:before {
     @include icons-sprite(icon-safety-nets);
     background-position: sprite-position($icons, icon-safety-nets, 4px, 5px);
   }
@@ -187,7 +190,7 @@
       &:after { @include gradient-up($color-2a); bottom: 0;}
       &:before { @include gradient-down ($color-2a); ; height:15px; bottom: 0;}
     }
-    &.current .father {
+    .clusters_sectors-page & .father {
       background-color: rgba($color-2, .3);
     }
   }
@@ -201,7 +204,7 @@
       &:after { @include gradient-up($color-6a)}
       &:before { @include gradient-down ($color-6a); ; height:15px;}
     }
-    &.current .father {
+    .organizations-page & .father {
       background-color: rgba($color-6, .3);
     }
   }
@@ -215,7 +218,7 @@
       &:after { @include gradient-up($color-7a)}
       &:before { @include gradient-down ($color-7a); ; height:15px;}
     }
-    &.current .father {
+    .donors-page & .father {
       background-color: rgba($color-7, .3);
     }
   }
@@ -229,13 +232,16 @@
       &:after { @include gradient-up($color-8a)}
       &:before { @include gradient-down ($color-8a); ; height:15px;}
     }
-    &.current .father {
+    .georegion-page & .father {
       background-color: rgba($color-8, .3);
     }
   }
+}
 
-  .fedex-logo {
-    margin-top: 3px;
+.mod-logos-slider {
+  height: 40px;
+  margin-top: 3px;
+  img {
+    display: block;
   }
-
 }
