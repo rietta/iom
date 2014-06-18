@@ -76,10 +76,6 @@ require([
 
   var $reportTitleTextarea = $('.report-title').find('textarea');
 
-  function is_touch_device() {
-    return 'ontouchstart' in window || 'onmsgesturechange' in window;
-  }
-
   // Extensions
   Number.prototype.toCommas = function() {
     return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -91,6 +87,22 @@ require([
       return context;
     }
     return context.toCommas();
+  });
+
+  Handlebars.registerHelper('starray', function(context) {
+    var result = '', i = 0, len = context.length;
+
+    if (context.length > 0) {
+      for (i=0;i<len;i++) {
+        if (i === len -1) {
+          result += context[i];
+        } else {
+          result += context[i] + ', ';
+        }
+      }
+    }
+
+    return result;
   });
 
   $.fn.noHandleChildren = function() {
@@ -195,12 +207,6 @@ require([
   });
 
   autoResizeTextare($reportTitleTextarea[0]);
-
-  if (is_touch_device()) {
-    $('body').addClass('is-touchscreen');
-  } else {
-    $('body').addClass('is-screen');
-  }
 
   new Router();
 
