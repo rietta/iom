@@ -1,7 +1,7 @@
 .mod-map-controls {
   position: relative;
   z-index: 1;
-  height: 100%;
+
   .control-navbar, .control-zoom, .click-to-see {
     position: absolute;
     border-radius: 40px;
@@ -119,12 +119,11 @@
   .current-selector .icon-info { display: none;}
 }
 .icon-info {
-  float: right;
   display: inline-block;
   width: 20px;
   height: 20px;
   background: image-url('icons/icon-info.svg') no-repeat center;
-
+  vertical-align: -6px;
 }
 .infowindow-pop, .infowindow-layer { display: inline-block;}
 
@@ -137,14 +136,11 @@ div.cartodb-infowindow {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
+.layout-embed-map {
+  .control-zoom {
+    right: 20px;
+  }
+  .control-navbar {
+    left: 20px;
+  }
+}

@@ -99,23 +99,32 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
     };
 
     function IOMMarker(info, diameter, classname, map) {
+      var isRegion = (info.name || info.region_name);
+
       // this.latlng_ = new google.maps.LatLng(info.lat,info.lon);
       this.latlng_ = new google.maps.LatLng(parseFloat(info.lat), parseFloat(info.lon));
       this.url = info.url;
       this.count = info.count;
       this.total_in_region = info.total_in_region;
       //this.image = image;
-      this.classname = classname;
+
       this.map_ = map;
-      this.name = info.name;
+      this.name = info.name || info.region_name;
       this.countryName = info.country_name;
       this.diameter = diameter;
-
-
       this.offsetVertical_ = -(this.diameter / 2);
       this.offsetHorizontal_ = -(this.diameter / 2);
       this.height_ = this.diameter;
       this.width_ = this.diameter;
+      this.classname = classname;
+
+      if (this.classname === 'marker-project-bubble' && isRegion) {
+        this.classname = 'marker-project-bubble is-marker-region';
+        this.height_ = 20;
+        this.width_ = 20;
+      } else if (this.classname === 'marker-bubble' && !info.code) {
+        this.classname = 'marker-bubble is-marker-region';
+      }
 
       this.setMap(map);
     }
@@ -129,21 +138,13 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
       var div = this.div_;
       if (!div) {
         div = this.div_ = document.createElement('div');
-        //div.style.border = 'none';
+
         div.className = this.classname;
         div.style.position = 'absolute';
         div.style.width = this.diameter + 'px';
         div.style.height = this.diameter + 'px';
         div.style.zIndex = 1;
         div.style.cursor = 'pointer';
-
-        //Marker image
-        // var marker_image = document.createElement('img');
-        // marker_image.style.position = 'relative';
-        // marker_image.style.width = '100%';
-        // marker_image.style.height = '100%';
-        // marker_image.src = this.image;
-        // div.appendChild(marker_image);
 
         try {
           if (show_regions_with_one_project) {
@@ -169,7 +170,6 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
               count.style.margin = '-9px 0 0 0px';
               count.style.font = 'normal 18px Arial';
             }
-            count.style.color = 'white';
             $(count).text(this.count);
             div.appendChild(count);
           }
@@ -197,7 +197,6 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
               count.style.margin = '-9px 0 0 0px';
               count.style.font = 'normal 18px Arial';
             }
-            count.style.color = 'white';
             $(count).text(this.count);
             div.appendChild(count);
           }
@@ -250,7 +249,13 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
             var _top_hidden = document.createElement('div');
             _top_hidden.className = 'map-top-tooltip';
 
-            var locationName = (this.countryName) ? this.name + ', ' + this.countryName : this.name;
+            var locationName = this.name;
+
+            if (this.countryName && this.name) {
+              locationName = this.name + ', ' + this.countryName;
+            } else if (!locationName) {
+              locationName = this.countryName;
+            }
 
             $(_top_hidden).html('<strong>' + locationName + '</strong>');
 
@@ -382,7 +387,9 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
       center: latlng,
       scrollwheel: false,
       disableDefaultUI: true,
+      overviewMapControl: true,
       styles: stylesArray,
+      minZoom: 1,
       maxZoom: 12,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControlOptions: {
@@ -390,11 +397,11 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
       }
     };
 
-    if (typeof window.ontouchstart !== 'undefined') {
-      mapOptions = _.extend(mapOptions, {
-        draggable: false
-      });
-    }
+    // if (typeof window.ontouchstart !== 'undefined') {
+    //   mapOptions = _.extend(mapOptions, {
+    //     draggable: false
+    //   });
+    // }
 
     cartodbOptions = {
       user_name: 'ngoaidmap',
@@ -494,7 +501,7 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
           legends: [choroplethLegend]
         });
 
-        var iconHtml = sprintf('%1$s <a href="#" class="infowindow-pop" data-overlay="%2$s"><span class="icon-info">i</span></a>', $el.data('layer'), $el.data('overlay'));
+        var iconHtml = sprintf('%1$s <a href="#" class="infowindow-pop" data-overlay="%2$s"><span class="icon-info"></span></a>', $el.data('layer'), $el.data('overlay'));
         var infowindowHtml = sprintf('<div class="cartodb-popup light"><a href="#close" class="cartodb-popup-close-button close">x</a><div class="cartodb-popup-content-wrapper"><div class="cartodb-popup-content"><h2>{{content.data.country_name}}</h2><p class="infowindow-layer">%s<p><p><span class="infowindow-data">{{#content.data.data}}{{content.data.data}}</span>%s{{/content.data.data}}{{^content.data.data}}No data{{/content.data.data}}</p><p class="data-year">{{content.data.year}}</p></div></div><div class="cartodb-popup-tip-container"></div></div>', iconHtml, $el.data('units'));
 
         sublayer = currentLayer.getSubLayer(0);
@@ -729,11 +736,10 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
         return false;
       }
 
-      this.active = false;
-
+      var $w = $(window);
       var self = this;
 
-      this.$w = $(window);
+      this.active = false;
 
       old();
 
@@ -742,7 +748,7 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
       if (this.$el.hasClass('layout-embed-map')) {
         this.undelegateEvents();
       } else {
-        this.$w.on('resize', function() {
+        $w.on('resize', function() {
           if (self.active) {
             self.resizeMap();
           } else {
@@ -753,15 +759,17 @@ define(['backbone', 'sprintf'], function(Backbone, sprintf) {
     },
 
     resizeMap: function() {
-      var h = this.$w.height() - 204;
+      if (!this.$el.hasClass('layout-embed-map')) {
+        var h = window.innerHeight - 204;
 
-      this.active = true;
+        this.active = true;
 
-      this.$el.animate({
-        height: h
-      }, 300);
+        this.$el.animate({
+          height: h
+        }, 300);
 
-      google.maps.event.trigger(map, 'resize');
+        google.maps.event.trigger(map, 'resize');
+      }
     },
 
     resetMap: function() {
