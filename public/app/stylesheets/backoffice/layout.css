@@ -859,12 +859,16 @@ div.med.information div.info {
     float: right; }
 div.med div.form_error {
   width: 483px;
-  height: 12px;
+  min-height: 12px;
   margin: 30px 0 0 0;
   padding: 20px 20px 20px 60px;
   font: normal 13px Arial;
   color: #FFFFFF;
-  background: url("/app/images/backoffice/common/form_error_bkg.png"); }
+  background-color: #ff2f2f !important;
+  background: url("/app/images/backoffice/common/form_error_alert.png") 0 0 no-repeat;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px; }
 div.bottom_grey {
   float: left;
   width: 942px;
@@ -5038,9 +5042,11 @@ textarea.huge {
 
 /*window alert*/
 div#modal_window {
-  position: absolute;
+  position: fixed;
   background: url("/app/images/backoffice/common/modal_bkg.png") repeat 0 0;
   display: none;
+  width: 100%;
+  height: 100%;
   top: 0;
   left: 0;
   right: 0;
@@ -5052,7 +5058,7 @@ div#modal_window {
     left: 50%;
     width: 450px;
     padding: 22px;
-    margin: -66px 0 0 -247px;
+    margin: -150px 0 0 -247px;
     background: url("/app/images/backoffice/common/modal_middle.png") repeat 0 0; }
     div#modal_window div.alert .top_border, div#modal_window div.alert .bottom_border {
       position: relative;
@@ -5142,7 +5148,7 @@ div#modal_window {
         height: 26px; }
     div#modal_window div.alert.error {
       width: 450px;
-      top: 30%;
+      /*top: 30%;*/
       left: 50%; }
       div#modal_window div.alert.error ul#errors {
         padding: 15px 0 0 15px;
