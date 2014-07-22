@@ -1,6 +1,7 @@
 
 [![Code Climate](https://codeclimate.com/github/rietta/iom.png)](https://codeclimate.com/github/rietta/iom)
-[![Code Climate](https://codeclimate.com/github/rietta/iom.png)](https://codeclimate.com/github/rietta/iom)
+[![Dependency Status](https://gemnasium.com/rietta/iom.svg)](https://gemnasium.com/rietta/iom)
+
 
 # Welcome to NGOAIDMAP
 
